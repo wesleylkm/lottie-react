@@ -1,6 +1,6 @@
 # react-lottie
 
-This project is rewrite [lottie-react]("https://github.com/LottieFiles/lottie-react") with **hooks**.
+This project is rewrite [lottie-react]("https://github.com/LottieFiles/lottie-react") with **Function Component**.
 
 Below is few of the intent
 
