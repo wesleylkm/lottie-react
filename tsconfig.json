@@ -5,7 +5,7 @@
     "strictNullChecks": true,
     "target": "ESNext",
     "module": "ESNext",
-    "lib": ["DOM", "DOM.Iterable"],
+    "lib": ["DOM", "ES2016"],
     "jsx": "react-jsxdev",
     "allowSyntheticDefaultImports": true,
     "noEmit": false
