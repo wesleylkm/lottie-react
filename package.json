@@ -1,0 +1,8 @@
+{
+  "name": "lottie-react",
+  "version": "0.0.1",
+  "main": "index.js",
+  "repository": "https://github.com/wesleylkm/lottie-react.git",
+  "author": "wesleylkm <wesleylkm@outlook.com>",
+  "license": "MIT"
+}
