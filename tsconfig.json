@@ -8,7 +8,9 @@
     "lib": ["DOM", "ES2016"],
     "jsx": "react-jsxdev",
     "allowSyntheticDefaultImports": true,
-    "noEmit": false
+    "noEmit": false,
+    "moduleResolution": "node",
+    "resolveJsonModule": true
   },
   "include": ["src"],
   "exclude": ["node_modules"]
