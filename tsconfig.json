@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "noImplicitAny": false,
+    "strictNullChecks": true,
+    "target": "ES5",
+    "module": "ESNext",
+    "lib": ["DOM", "DOM.Iterable"],
+    "jsx": "react-jsxdev",
+    "allowSyntheticDefaultImports": true,
+    "noEmit": false
+  },
+  "include": ["src"],
+  "exclude": ["node_modules"]
+}
