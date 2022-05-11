@@ -6,19 +6,25 @@ interface PlayerOptions {
   src: any;
 }
 
+// This hook will accept options that will pass to loadAnimation()
 const useLottieWeb = (options: PlayerOptions) => {
   const { src } = options;
 
   const containerRef = useRef<HTMLDivElement>(null);
+  // TODO:: Return lottieInstance (ref) is not elegant, because use need to access by .current
+  // But if return .current, it will be empty because it not yet begin initialize
   const lottieInstance = useRef<AnimationItem | null>(null);
 
   // This effect is called twice in React 18 <StrictMode />, to overcome this, we need an extra ref to flag it
   useEffect(() => {
-    if (containerRef.current)
-      lottieInstance.current = lottie.loadAnimation({
+    if (containerRef.current) {
+      const instance = lottie.loadAnimation({
         animationData: src,
         container: containerRef.current,
       });
+
+      lottieInstance.current = instance;
+    }
 
     return () => {
       if (lottieInstance.current) {
@@ -27,8 +33,7 @@ const useLottieWeb = (options: PlayerOptions) => {
     };
   }, []);
 
-  // This hook will accept options that will pass to loadAnimation()
-  return { containerRef };
+  return { containerRef, lottieInstance };
 };
 
 export default useLottieWeb;
