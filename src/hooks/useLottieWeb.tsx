@@ -1,29 +1,23 @@
-import { useEffect, useRef } from "react";
 import lottie, { AnimationItem } from "lottie-web";
+import { useCallback, useEffect, useRef } from "react";
 
-interface PlayerOptions {
-  // TODO:: What will be the type of src? It can be a string and a JSON object?
+interface LottieWebOptions {
   src: any;
 }
 
-// This hook will accept options that will pass to loadAnimation()
-const useLottieWeb = (options: PlayerOptions) => {
+const useLottieWeb = (options: LottieWebOptions) => {
   const { src } = options;
 
-  const containerRef = useRef<HTMLDivElement>(null);
-  // TODO:: Return lottieInstance (ref) is not elegant, because use need to access by .current
-  // But if return .current, it will be empty because it not yet begin initialize
-  const lottieInstance = useRef<AnimationItem | null>(null);
+  const [node, setNodeRef] = useNodeRef();
+  const lottieInstance = useRef<AnimationItem>();
 
-  // This effect is called twice in React 18 <StrictMode />, to overcome this, we need an extra ref to flag it
   useEffect(() => {
-    if (containerRef.current) {
-      const instance = lottie.loadAnimation({
+    if (node.current) {
+      // Load the animation using "lottie-web"
+      lottieInstance.current = lottie.loadAnimation({
         animationData: src,
-        container: containerRef.current,
+        container: node.current,
       });
-
-      lottieInstance.current = instance;
     }
 
     return () => {
@@ -33,7 +27,19 @@ const useLottieWeb = (options: PlayerOptions) => {
     };
   }, []);
 
-  return { containerRef, lottieInstance };
+  return { setNodeRef };
+};
+
+// Instead of passing the node refObj outside, we only pass a function to get refer node from
+// the user.
+const useNodeRef = () => {
+  const node = useRef<HTMLElement | null>(null);
+
+  const setNodeRef = useCallback((element: HTMLElement | null) => {
+    node.current = element;
+  }, []);
+
+  return [node, setNodeRef] as const;
 };
 
 export default useLottieWeb;

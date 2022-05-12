@@ -11,7 +11,15 @@ const App = () => {
         React-lottie
       </h1>
 
-      <Player />
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Player />
+      </div>
     </div>
   );
 };
