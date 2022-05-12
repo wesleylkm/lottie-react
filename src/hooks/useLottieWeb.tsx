@@ -1,11 +1,15 @@
-import lottie, { AnimationItem } from "lottie-web";
+import lottie, {
+  AnimationConfigWithData,
+  AnimationConfigWithPath,
+  AnimationItem,
+} from "lottie-web";
 import { useCallback, useEffect, useRef } from "react";
 
-interface LottieWebOptions {
+interface LottieWebOption {
   src: any;
 }
 
-const useLottieWeb = (options: LottieWebOptions) => {
+function useLottieWeb(options: LottieWebOption) {
   const { src } = options;
 
   const [node, setNodeRef] = useNodeRef();
@@ -13,11 +17,19 @@ const useLottieWeb = (options: LottieWebOptions) => {
 
   useEffect(() => {
     if (node.current) {
+      const processedOption: AnimationConfigWithPath | AnimationConfigWithData =
+        {
+          container: node.current,
+        };
+
+      if (typeof src === "string") {
+        (processedOption as AnimationConfigWithPath).path = src;
+      } else {
+        (processedOption as AnimationConfigWithData).animationData = src;
+      }
+
       // Load the animation using "lottie-web"
-      lottieInstance.current = lottie.loadAnimation({
-        animationData: src,
-        container: node.current,
-      });
+      lottieInstance.current = lottie.loadAnimation(processedOption);
     }
 
     return () => {
@@ -25,14 +37,14 @@ const useLottieWeb = (options: LottieWebOptions) => {
         lottieInstance.current.destroy();
       }
     };
-  }, []);
+  }, [src]);
 
   return { setNodeRef };
-};
+}
 
 // Instead of passing the node refObj outside, we only pass a function to get refer node from
 // the user.
-const useNodeRef = () => {
+function useNodeRef() {
   const node = useRef<HTMLElement | null>(null);
 
   const setNodeRef = useCallback((element: HTMLElement | null) => {
@@ -40,6 +52,6 @@ const useNodeRef = () => {
   }, []);
 
   return [node, setNodeRef] as const;
-};
+}
 
 export default useLottieWeb;
