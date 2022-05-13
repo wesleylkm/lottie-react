@@ -1,31 +1,19 @@
 import useLottieWeb from "../hooks/useLottieWeb";
-import animationData from "../assets/guitarist.json";
-import { CSSProperties, FC, useState } from "react";
+import { CSSProperties, FC } from "react";
 
-interface PlayerProps {}
+interface PlayerProps {
+  src: any;
+}
 
-const Player: FC<PlayerProps> = () => {
-  const [swap, setSwap] = useState(false);
-
+const Player: FC<PlayerProps> = (props) => {
+  const { src } = props;
   const { setNodeRef } = useLottieWeb({
-    src: swap
-      ? animationData
-      : "https://assets2.lottiefiles.com/packages/lf20_kpx9c6si.json",
+    src,
   });
 
   return (
     <div>
-      <h1>Player</h1>
-
       <div ref={setNodeRef} style={testSize} />
-
-      <button
-        onClick={() => {
-          setSwap(!swap);
-        }}
-      >
-        Swap
-      </button>
     </div>
   );
 };

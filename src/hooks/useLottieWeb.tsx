@@ -1,8 +1,4 @@
-import lottie, {
-  AnimationConfigWithData,
-  AnimationConfigWithPath,
-  AnimationItem,
-} from "lottie-web";
+import lottie, { AnimationConfig, AnimationItem } from "lottie-web";
 import { useCallback, useEffect, useRef } from "react";
 
 interface LottieWebOption {
@@ -17,19 +13,19 @@ function useLottieWeb(options: LottieWebOption) {
 
   useEffect(() => {
     if (node.current) {
-      const processedOption: AnimationConfigWithPath | AnimationConfigWithData =
-        {
-          container: node.current,
-        };
+      const animationConfig: AnimationConfig = {
+        container: node.current,
+      };
 
+      // Depend on src type, decide use "path" or "animationData"
+      // TODO:: current lottie-web do support for src as a string that content is a JSON
       if (typeof src === "string") {
-        (processedOption as AnimationConfigWithPath).path = src;
+        animationConfig["path"] = src;
       } else {
-        (processedOption as AnimationConfigWithData).animationData = src;
+        animationConfig["animationData"] = src;
       }
 
-      // Load the animation using "lottie-web"
-      lottieInstance.current = lottie.loadAnimation(processedOption);
+      lottieInstance.current = lottie.loadAnimation(animationConfig);
     }
 
     return () => {

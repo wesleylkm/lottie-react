@@ -1,4 +1,5 @@
 import Player from "./components/Player";
+import animationData from "./assets/guitarist.json";
 
 const App = () => {
   return (
@@ -18,7 +19,10 @@ const App = () => {
           alignItems: "center",
         }}
       >
-        <Player />
+        <Player
+          src="https://assets2.lottiefiles.com/packages/lf20_l3awcbpv.json"
+          // src={animationData}
+        />
       </div>
     </div>
   );
