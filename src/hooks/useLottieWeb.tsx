@@ -1,12 +1,13 @@
 import lottie, { AnimationConfig, AnimationItem } from "lottie-web";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 interface LottieWebOption {
   src: any;
+  onError: () => void;
 }
 
 function useLottieWeb(options: LottieWebOption) {
-  const { src } = options;
+  const { src, onError } = options;
 
   const [node, setNodeRef] = useNodeRef();
   const lottieInstance = useRef<AnimationItem>();
@@ -30,11 +31,23 @@ function useLottieWeb(options: LottieWebOption) {
 
     return () => {
       if (lottieInstance.current) {
-        // TODO:: When OffScreen Api is done, we will modify it? To make it persistent. So the animation state is preserve
+        // NOTE:: For now i just destroy the lottieInstance, we can use one more ref to detect is the
+        // TODO:: When OffScreen Api is done, we will modify it? To make it persistent. So the animation state is preserved.
         // Or we can store animationFrame as "React State", and when it come infront, the animation timeline is preserved.
         lottieInstance.current.destroy();
       }
     };
+  }, [src]);
+
+  // Add event listener
+  // NOTE:: Error will be special handler, because we want handle error using react.
+  // QUESTION:: If the animation data is not correct. lottie-web just crash, and we unable to catch it
+  useEffect(() => {
+    if (lottieInstance.current) {
+      lottieInstance.current.addEventListener("data_failed", () => {
+        if (onError) onError();
+      });
+    }
   }, [src]);
 
   return { setNodeRef };

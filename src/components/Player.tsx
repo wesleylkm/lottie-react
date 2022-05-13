@@ -7,8 +7,12 @@ interface PlayerProps {
 
 const Player: FC<PlayerProps> = (props) => {
   const { src } = props;
+
   const { setNodeRef } = useLottieWeb({
     src,
+    onError() {
+      console.log("Calling from: onError");
+    },
   });
 
   return (
