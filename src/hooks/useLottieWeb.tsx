@@ -30,6 +30,8 @@ function useLottieWeb(options: LottieWebOption) {
 
     return () => {
       if (lottieInstance.current) {
+        // TODO:: When OffScreen Api is done, we will modify it? To make it persistent. So the animation state is preserve
+        // Or we can store animationFrame as "React State", and when it come infront, the animation timeline is preserved.
         lottieInstance.current.destroy();
       }
     };
