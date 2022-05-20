@@ -11,3 +11,16 @@
 - We need a way to trigger re-render, so user can **reload** the component when there are error (for example fetch timeout)
 
 5. We should allow user to **reload**, if unable to load animation data at the **first try**
+
+6. When <OffScreen /> API is ready, we want to make it compatible. (make use of **initialMount** Ref)
+
+7. `Only animationData` property can use playSegments before DOMLoaded, if want `path` property works too, we need to do below
+
+```ts
+const lottieInstance = // Initialize
+  lottieInstace.addEventListener("DOMLoaded", () => {
+    lottieInstance.playSegments([1, 10], true);
+  });
+```
+
+[Refer](https://github.com/airbnb/lottie-web/issues/1039)
