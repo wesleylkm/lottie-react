@@ -1,13 +1,18 @@
-import lottie, { AnimationConfig, AnimationItem } from "lottie-web";
+import lottie, {
+  AnimationConfig,
+  AnimationItem,
+  AnimationDirection,
+} from "lottie-web";
 import { useCallback, useEffect, useRef } from "react";
 import { useNodeRef } from "./utils";
 
 interface LottieWebOption {
   src: any;
+  direction?: AnimationDirection;
 }
 
 function useLottieWeb(options: LottieWebOption) {
-  const { src } = options;
+  const { src, direction = 1 } = options;
 
   const [node, setNodeRef] = useNodeRef();
   const lottieInstance = useRef<AnimationItem | null>();
@@ -19,7 +24,7 @@ function useLottieWeb(options: LottieWebOption) {
       };
 
       // Depend on src type, decide use "path" or "animationData"
-      // TODO:: current lottie-web do support for src as a string that content is a JSON
+      // TODO:: current react-lottie do support for src as a string that content is a JSON
       if (typeof src === "string") {
         animationConfig["path"] = src;
       } else {
@@ -42,6 +47,20 @@ function useLottieWeb(options: LottieWebOption) {
     };
   }, [src]);
 
+  // Set Direction when initial, or prop changed
+  useEffect(() => {
+    if (lottieInstance.current) {
+      const { current } = lottieInstance;
+
+      if (current.isPaused) {
+        const totalFrame = current.totalFrames;
+        current.goToAndStop(direction === -1 ? totalFrame : 0, true);
+      }
+
+      current.setDirection(direction);
+    }
+  }, [direction]);
+
   const play = useCallback(() => {
     lottieInstance.current?.play();
   }, []);
@@ -50,7 +69,16 @@ function useLottieWeb(options: LottieWebOption) {
     lottieInstance.current?.pause();
   }, []);
 
-  return { setNodeRef, play, pause };
+  const stop = useCallback(() => {
+    if (!lottieInstance.current) return;
+    // NOTE:: If user set direction, means the last frame should be the initial frame
+    const { current } = lottieInstance;
+
+    const totalFrame = current.totalFrames;
+    current.goToAndStop(direction === -1 ? totalFrame : 0, true);
+  }, [direction]);
+
+  return { setNodeRef, play, pause, stop };
 }
 
 export default useLottieWeb;
