@@ -8,16 +8,18 @@ interface PlayerProps {
 const Player: FC<PlayerProps> = (props) => {
   const { src } = props;
 
-  const { setNodeRef } = useLottieWeb({
+  const { setNodeRef, play, pause } = useLottieWeb({
     src,
-    onError() {
-      console.log("Calling from: onError");
-    },
   });
 
   return (
     <div>
       <div ref={setNodeRef} style={testSize} />
+
+      <div>
+        <button onClick={play}>Play</button>
+        <button onClick={pause}>Pause</button>
+      </div>
     </div>
   );
 };

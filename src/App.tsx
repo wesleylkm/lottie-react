@@ -1,5 +1,5 @@
 import Player from "./components/Player";
-import animationData from "./assets/guitarist.json";
+import animationData from "./assets/growth-chart.json";
 
 const App = () => {
   return (
@@ -20,7 +20,7 @@ const App = () => {
         }}
       >
         <Player
-          src="https://assets2.lottiefiles.com/packages/lf20_l3awcbpv.json"
+          src="https://assets6.lottiefiles.com/private_files/lf30_0ffmp6vx.json"
           // src={animationData}
         />
       </div>

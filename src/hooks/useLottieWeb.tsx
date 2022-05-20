@@ -1,18 +1,18 @@
 import lottie, { AnimationConfig, AnimationItem } from "lottie-web";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef } from "react";
+import { useNodeRef } from "./utils";
 
 interface LottieWebOption {
   src: any;
-  onError: () => void;
 }
 
 function useLottieWeb(options: LottieWebOption) {
-  const { src, onError } = options;
+  const { src } = options;
 
   const [node, setNodeRef] = useNodeRef();
-  const lottieInstance = useRef<AnimationItem>();
+  const lottieInstance = useRef<AnimationItem | null>();
 
-  useEffect(() => {
+  const loadAnimation = () => {
     if (node.current) {
       const animationConfig: AnimationConfig = {
         container: node.current,
@@ -28,41 +28,29 @@ function useLottieWeb(options: LottieWebOption) {
 
       lottieInstance.current = lottie.loadAnimation(animationConfig);
     }
+  };
+
+  useEffect(() => {
+    loadAnimation();
 
     return () => {
       if (lottieInstance.current) {
-        // NOTE:: For now i just destroy the lottieInstance, we can use one more ref to detect is the
-        // TODO:: When OffScreen Api is done, we will modify it? To make it persistent. So the animation state is preserved.
-        // Or we can store animationFrame as "React State", and when it come infront, the animation timeline is preserved.
         lottieInstance.current.destroy();
+
+        lottieInstance.current = null;
       }
     };
   }, [src]);
 
-  // Add event listener
-  // NOTE:: Error will be special handler, because we want handle error using react.
-  // QUESTION:: If the animation data is not correct. lottie-web just crash, and we unable to catch it
-  useEffect(() => {
-    if (lottieInstance.current) {
-      lottieInstance.current.addEventListener("data_failed", () => {
-        if (onError) onError();
-      });
-    }
-  }, [src]);
-
-  return { setNodeRef };
-}
-
-// Instead of passing the node refObj outside, we only pass a function to get refer node from
-// the user.
-function useNodeRef() {
-  const node = useRef<HTMLElement | null>(null);
-
-  const setNodeRef = useCallback((element: HTMLElement | null) => {
-    node.current = element;
+  const play = useCallback(() => {
+    lottieInstance.current?.play();
   }, []);
 
-  return [node, setNodeRef] as const;
+  const pause = useCallback(() => {
+    lottieInstance.current?.pause();
+  }, []);
+
+  return { setNodeRef, play, pause };
 }
 
 export default useLottieWeb;
