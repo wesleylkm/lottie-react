@@ -28,15 +28,7 @@ interface PlayerProps {
 }
 
 const Player: FC<PlayerProps> = (props) => {
-  const {
-    src,
-    autoPlay,
-    loop,
-    speed,
-    direction,
-    onEvent = {},
-    hoverToPlay = false,
-  } = props;
+  const { src, autoPlay, loop, speed, direction, onEvent = {} } = props;
 
   const {
     onConfigReady,
@@ -70,7 +62,7 @@ const Player: FC<PlayerProps> = (props) => {
     onError,
   ]);
 
-  const { setNodeRef, play, pause, stop } = useLottieWeb({
+  const { setNodeRef } = useLottieWeb({
     src,
     autoPlay,
     loop,
@@ -80,14 +72,9 @@ const Player: FC<PlayerProps> = (props) => {
   });
 
   return (
-    <div>
+    <div style={{ marginTop: "200px" }}>
+      <h1 style={{ textAlign: "center" }}>React-lottie</h1>
       <div ref={setNodeRef} style={testSize} />
-
-      <div>
-        <button onClick={play}>Play</button>
-        <button onClick={pause}>Pause</button>
-        <button onClick={stop}>Stop</button>
-      </div>
     </div>
   );
 };
