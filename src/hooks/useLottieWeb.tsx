@@ -9,7 +9,8 @@ import { useNodeRef } from "./utils";
 interface LottieWebOption {
   src: any;
   autoPlay?: boolean;
-  loop?: boolean;
+  loop?: number | boolean;
+  speed?: number;
   direction?: AnimationDirection;
   speed?: number;
 }

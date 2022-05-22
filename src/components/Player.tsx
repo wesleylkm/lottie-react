@@ -4,7 +4,8 @@ import { CSSProperties, FC } from "react";
 interface PlayerProps {
   src: any;
   autoPlay?: boolean;
-  loop?: boolean;
+  loop?: number | boolean;
+  speed?: number;
   direction?: AnimationDirection;
   speed?: number;
 }
