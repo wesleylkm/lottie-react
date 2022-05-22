@@ -1,0 +1,23 @@
+# Check List
+
+- [x] anim.play()
+- [x] anim.stop() -> support direction
+- [x] anim.pause()
+- [] anim.setLocationHref(locationHref)
+- [x] anim.setSpeed(speed) -> change using props
+- [] anim.goToAndStop(value, isFrame)
+- [] anim.goToAndPlay(value, isFrame)
+- [x] anim.setDirection(direction) -> change using props
+- [] anim.playSegments(segments, forceFlag)
+- [] anim.setSubframe(flag)
+- [x] anim.destroy()
+- [] error handling (onError)
+- [] hover to play
+- [] pause animation when not in view -> listener
+- [] expose renderer settings
+- [] player expose ref to user (forward ref)
+- [] expose event listener to user?
+- [] play segment
+- [] build player (hover, play,pause,stop button, number of frame, dragger)
+- [] done useLottieHooks (low level api)
+- [] allow user to attach event handler

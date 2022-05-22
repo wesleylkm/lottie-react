@@ -3,13 +3,27 @@ import { CSSProperties, FC } from "react";
 
 interface PlayerProps {
   src: any;
+  autoPlay?: boolean;
+  loop?: boolean;
+  direction?: AnimationDirection;
+  speed?: number;
 }
 
 const Player: FC<PlayerProps> = (props) => {
-  const { src } = props;
-
-  const { setNodeRef, play, pause } = useLottieWeb({
+  const {
     src,
+    autoPlay,
+    loop,
+    speed,
+    direction,
+  } = props;
+
+  const { setNodeRef, play, pause, stop } = useLottieWeb({
+    src,
+    autoPlay,
+    loop,
+    speed,
+    direction,
   });
 
   return (
@@ -19,6 +33,7 @@ const Player: FC<PlayerProps> = (props) => {
       <div>
         <button onClick={play}>Play</button>
         <button onClick={pause}>Pause</button>
+        <button onClick={stop}>Stop</button>
       </div>
     </div>
   );

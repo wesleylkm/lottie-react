@@ -24,3 +24,10 @@ const lottieInstance = // Initialize
 ```
 
 [Refer](https://github.com/airbnb/lottie-web/issues/1039)
+
+8. For `hoverToPlay`, `autoplay` need to be disabled. Because if user want to use hoverToPlay, means they want to play and pause the animation by pointer not button (i assume).
+
+9. To get the exact **Number of Frame** from `enterFrame callback` We need to set `subFrame(false)` and access `instance.totalFrames`
+   [Refer]("https://github.com/airbnb/lottie-web/issues/967")
+
+10. `totalFrames` is only available after/during the `DOMLoaded` event callback. So we need to separate the DOMLoaded event and **set totalFrame** of the animation

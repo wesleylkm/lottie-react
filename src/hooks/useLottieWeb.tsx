@@ -8,11 +8,14 @@ import { useNodeRef } from "./utils";
 
 interface LottieWebOption {
   src: any;
+  autoPlay?: boolean;
+  loop?: boolean;
   direction?: AnimationDirection;
+  speed?: number;
 }
 
 function useLottieWeb(options: LottieWebOption) {
-  const { src, direction = 1 } = options;
+  const { src, loop, autoPlay, direction = 1, speed = 1 } = options;
 
   const [node, setNodeRef] = useNodeRef();
   const lottieInstance = useRef<AnimationItem | null>();
@@ -21,6 +24,8 @@ function useLottieWeb(options: LottieWebOption) {
     if (node.current) {
       const animationConfig: AnimationConfig = {
         container: node.current,
+        autoplay: autoPlay || false,
+        loop: loop || false,
       };
 
       // Depend on src type, decide use "path" or "animationData"
@@ -61,6 +66,23 @@ function useLottieWeb(options: LottieWebOption) {
     }
   }, [direction]);
 
+  useEffect(() => {
+    if (lottieInstance.current) {
+      const { current } = lottieInstance;
+
+      current.setSpeed(speed);
+    }
+  }, [speed]);
+
+  /**
+   *
+   *
+   *
+   * ======== Callback ========
+   *
+   *
+   */
+
   const play = useCallback(() => {
     lottieInstance.current?.play();
   }, []);
@@ -71,7 +93,7 @@ function useLottieWeb(options: LottieWebOption) {
 
   const stop = useCallback(() => {
     if (!lottieInstance.current) return;
-    // NOTE:: If user set direction, means the last frame should be the initial frame
+    // NOTE:: If user set direction to -1, means the last frame should be the initial frame (also apply to direction useEffect)
     const { current } = lottieInstance;
 
     const totalFrame = current.totalFrames;
