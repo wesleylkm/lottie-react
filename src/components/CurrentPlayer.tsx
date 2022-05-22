@@ -4,11 +4,13 @@ import AnimationData from "../assets/guitarist.json";
 
 const CurrentPlayer = () => (
   <Player
-    src={AnimationData}
+    src="https://assets10.lottiefiles.com/packages/lf20_lzpnnin5.json"
     autoplay
     loop
     controls
     style={{ height: "300px", width: "300px" }}
+    hover
+    keepLastFrame
   />
 );
 

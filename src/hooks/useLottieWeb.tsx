@@ -2,6 +2,7 @@ import lottie, {
   AnimationConfig,
   AnimationItem,
   AnimationDirection,
+  AnimationEventName,
 } from "lottie-web";
 import { useCallback, useEffect, useRef } from "react";
 import { useNodeRef } from "./utils";
@@ -12,11 +13,20 @@ interface LottieWebOption {
   loop?: number | boolean;
   speed?: number;
   direction?: AnimationDirection;
-  speed?: number;
+  onEvent?: {
+    [K in AnimationEventName]?: (animationItem: AnimationItem) => void;
+  };
 }
 
 function useLottieWeb(options: LottieWebOption) {
-  const { src, loop, autoPlay, direction = 1, speed = 1 } = options;
+  const {
+    src,
+    loop,
+    autoPlay,
+    onEvent = {},
+    direction = 1,
+    speed = 1,
+  } = options;
 
   const [node, setNodeRef] = useNodeRef();
   const lottieInstance = useRef<AnimationItem | null>();
@@ -47,6 +57,34 @@ function useLottieWeb(options: LottieWebOption) {
     return () => {
       if (lottieInstance.current) {
         lottieInstance.current.destroy();
+      }
+    };
+  }, [src]);
+
+  // Add EventListener
+  useEffect(() => {
+    if (lottieInstance.current) {
+      const { current } = lottieInstance;
+
+      for (const eventName of Object.keys(onEvent)) {
+        const callback = onEvent[eventName];
+
+        if (callback) {
+          current.addEventListener(eventName as AnimationEventName, () => {
+            callback();
+          });
+        }
+      }
+    }
+
+    return () => {
+      if (lottieInstance.current) {
+        console.log("Remove eventlistener");
+        const { current } = lottieInstance;
+
+        for (const eventName of Object.keys(onEvent)) {
+          current.removeEventListener(eventName as AnimationEventName);
+        }
 
         lottieInstance.current = null;
       }
