@@ -31,3 +31,5 @@ const lottieInstance = // Initialize
    [Refer]("https://github.com/airbnb/lottie-web/issues/967")
 
 10. `totalFrames` is only available after/during the `DOMLoaded` event callback. So we need to separate the DOMLoaded event and **set totalFrame** of the animation
+
+11. `canvas` rendering has the highest quality, then html, svg

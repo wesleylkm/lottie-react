@@ -179,7 +179,7 @@ function useLottieWeb(options: LottieWebOption) {
     current.goToAndStop(direction === -1 ? totalFrame : 0, true);
   }, [direction]);
 
-  return { setNodeRef, play, pause, stop };
+  return { lottieInstance, setNodeRef, play, pause, stop };
 }
 
 export default useLottieWeb;

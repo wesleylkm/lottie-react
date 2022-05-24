@@ -23,3 +23,6 @@
 - [x] allow user to attach event handler
 - [x] allow to get currentFrame using enterFrame eventlistener
 - [] refactor variable name
+- [] write test (E2E (multiple browser) first then unit if necessary)
+- [] Player component `rendererSettings` intellsense based on `renderer` (typescript)
+- [x] Expose AnimationItem instance to user (useLottieWeb hooks)
