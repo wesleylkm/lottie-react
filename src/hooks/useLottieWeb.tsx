@@ -7,25 +7,39 @@ import lottie, {
 import { useCallback, useEffect, useRef } from "react";
 import { useNodeRef } from "./utils";
 
-interface LottieWebOption {
+type FilteredEventName = Exclude<
+  AnimationEventName,
+  "enterFrame" | "DOMLoaded"
+>;
+type EventListener = {
+  [K in FilteredEventName]?: (animationItem: AnimationItem) => void;
+};
+
+type LottieWebOption = {
   src: any;
   autoPlay?: boolean;
   loop?: number | boolean;
   speed?: number;
   direction?: AnimationDirection;
-  onEvent?: {
-    [K in AnimationEventName]?: (animationItem: AnimationItem) => void;
+  exactFrame?: boolean;
+  onEvent?: EventListener & {
+    DOMLoaded?: (animationItem: AnimationItem) => void;
+    enterFrame?: (
+      animationItem: AnimationItem,
+      currentFrameNumber?: number
+    ) => void;
   };
-}
+};
 
 function useLottieWeb(options: LottieWebOption) {
   const {
     src,
-    loop,
     autoPlay,
-    onEvent = {},
-    direction = 1,
+    loop,
     speed = 1,
+    direction = 1,
+    exactFrame = false,
+    onEvent = {},
   } = options;
 
   const [node, setNodeRef] = useNodeRef();
@@ -57,6 +71,8 @@ function useLottieWeb(options: LottieWebOption) {
     return () => {
       if (lottieInstance.current) {
         lottieInstance.current.destroy();
+
+        lottieInstance.current = null;
       }
     };
   }, [src]);
@@ -66,29 +82,31 @@ function useLottieWeb(options: LottieWebOption) {
     if (lottieInstance.current) {
       const { current } = lottieInstance;
 
-      for (const eventName of Object.keys(onEvent)) {
+      const { enterFrame, ...rest } = onEvent;
+
+      if (enterFrame) {
+        current.addEventListener("enterFrame", () => {
+          const currentFrame = current.currentFrame + 1;
+          enterFrame(current, currentFrame);
+        });
+      }
+
+      for (const eventName of Object.keys(rest)) {
         const callback = onEvent[eventName];
 
         if (callback) {
           current.addEventListener(eventName as AnimationEventName, () => {
-            callback();
+            callback(current);
           });
         }
       }
-    }
 
-    return () => {
-      if (lottieInstance.current) {
-        console.log("Remove eventlistener");
-        const { current } = lottieInstance;
-
-        for (const eventName of Object.keys(onEvent)) {
-          current.removeEventListener(eventName as AnimationEventName);
-        }
-
-        lottieInstance.current = null;
+      if (exactFrame) {
+        current.addEventListener("DOMLoaded", () => {
+          current.setSubframe(false);
+        });
       }
-    };
+    }
   }, [src]);
 
   // Set Direction when initial, or prop changed

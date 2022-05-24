@@ -14,6 +14,11 @@ const PlayerEvent = {
   onError: "data_failed",
 };
 
+type FilteredEventName = Exclude<keyof typeof PlayerEvent, "onFrame">;
+type FilteredEventListener = {
+  [K in FilteredEventName]?: (animationItem: AnimationItem) => void;
+};
+
 // TODO:: Split playerProps and useLottieWeb hooks props
 interface PlayerProps {
   src: any;
@@ -21,14 +26,23 @@ interface PlayerProps {
   loop?: number | boolean;
   speed?: number;
   direction?: AnimationDirection;
-  onEvent?: {
-    [K in keyof typeof PlayerEvent]?: (animationItem: AnimationItem) => void;
+  exactFrame?: boolean;
+  onEvent?: FilteredEventListener & {
+    onFrame?: (animationItem: AnimationItem, currentFrame?: number) => void;
   };
   hoverToPlay?: boolean;
 }
 
 const Player: FC<PlayerProps> = (props) => {
-  const { src, autoPlay, loop, speed, direction, onEvent = {} } = props;
+  const {
+    src,
+    autoPlay,
+    loop,
+    speed,
+    direction,
+    exactFrame,
+    onEvent = {},
+  } = props;
 
   const {
     onConfigReady,
@@ -52,6 +66,7 @@ const Player: FC<PlayerProps> = (props) => {
 
     return result;
   }, [
+    exactFrame,
     onConfigReady,
     onDataReady,
     onFrame,
@@ -68,6 +83,7 @@ const Player: FC<PlayerProps> = (props) => {
     loop,
     speed,
     direction,
+    exactFrame,
     onEvent: AllEvent,
   });
 

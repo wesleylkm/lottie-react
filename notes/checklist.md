@@ -21,3 +21,5 @@
 - [] build player (hover, play,pause,stop button, number of frame, dragger)
 - [] done useLottieHooks (low level api)
 - [x] allow user to attach event handler
+- [x] allow to get currentFrame using enterFrame eventlistener
+- [] refactor variable name
