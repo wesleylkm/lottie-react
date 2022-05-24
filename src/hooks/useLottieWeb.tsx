@@ -3,6 +3,9 @@ import lottie, {
   AnimationItem,
   AnimationDirection,
   AnimationEventName,
+  SVGRendererConfig,
+  CanvasRendererConfig,
+  HTMLRendererConfig,
 } from "lottie-web";
 import { useCallback, useEffect, useRef } from "react";
 import { useNodeRef } from "./utils";
@@ -29,7 +32,21 @@ type LottieWebOption = {
       currentFrameNumber?: number
     ) => void;
   };
-};
+} & RenderOptions;
+
+type RenderOptions =
+  | {
+      renderer: "html";
+      rendererSettings: HTMLRendererConfig;
+    }
+  | {
+      renderer: "svg";
+      rendererSettings: SVGRendererConfig;
+    }
+  | {
+      renderer: "canvas";
+      rendererSettings: CanvasRendererConfig;
+    };
 
 function useLottieWeb(options: LottieWebOption) {
   const {
@@ -40,6 +57,8 @@ function useLottieWeb(options: LottieWebOption) {
     direction = 1,
     exactFrame = false,
     onEvent = {},
+    renderer = "canvas",
+    rendererSettings = {},
   } = options;
 
   const [node, setNodeRef] = useNodeRef();
@@ -51,6 +70,9 @@ function useLottieWeb(options: LottieWebOption) {
         container: node.current,
         autoplay: autoPlay || false,
         loop: loop || false,
+        // TODO:: Unable to pass in other renderer type
+        renderer: renderer as any,
+        rendererSettings: rendererSettings,
       };
 
       // Depend on src type, decide use "path" or "animationData"
