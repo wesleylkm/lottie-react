@@ -11,8 +11,8 @@
 - [] anim.playSegments(segments, forceFlag)
 - [] anim.setSubframe(flag)
 - [x] anim.destroy()
-- [] error handling (onError)
-- [] hover to play
+- [x] error handling (onError)
+- [x] hover to play
 - [] pause animation when not in view -> listener
 - [] expose renderer settings
 - [] player expose ref to user (forward ref)
