@@ -128,6 +128,16 @@ function useLottieWeb(options: LottieWebOption) {
           current.setSubframe(false);
         });
       }
+
+      // NOTE:: totalFrames only available after DomLoaded
+      if (direction === -1) {
+        current.addEventListener("DOMLoaded", () => {
+          const totalFrames = current.totalFrames;
+
+          current.goToAndStop(totalFrames, true);
+          current.setDirection(-1);
+        });
+      }
     }
   }, [src]);
 
@@ -137,8 +147,8 @@ function useLottieWeb(options: LottieWebOption) {
       const { current } = lottieInstance;
 
       if (current.isPaused) {
-        const totalFrame = current.totalFrames;
-        current.goToAndStop(direction === -1 ? totalFrame : 0, true);
+        const totalFrames = current.totalFrames;
+        current.goToAndStop(direction === -1 ? totalFrames : 0, true);
       }
 
       current.setDirection(direction);
