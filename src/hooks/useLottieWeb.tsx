@@ -26,6 +26,7 @@ type LottieWebOption = {
   direction?: AnimationDirection;
   exactFrame?: boolean;
   onEvent?: EventListener & {
+    data_failed?: (error: any) => void;
     DOMLoaded?: (animationItem: AnimationItem) => void;
     enterFrame?: (
       animationItem: AnimationItem,
@@ -104,7 +105,7 @@ function useLottieWeb(options: LottieWebOption) {
     if (lottieInstance.current) {
       const { current } = lottieInstance;
 
-      const { enterFrame, ...rest } = onEvent;
+      const { enterFrame, data_failed, ...rest } = onEvent;
 
       if (enterFrame) {
         current.addEventListener("enterFrame", () => {
@@ -136,6 +137,12 @@ function useLottieWeb(options: LottieWebOption) {
 
           current.goToAndStop(totalFrames, true);
           current.setDirection(-1);
+        });
+      }
+
+      if (data_failed) {
+        current.addEventListener("data_failed", () => {
+          data_failed("Failed to fetch lottie animation from resource");
         });
       }
     }
