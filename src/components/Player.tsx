@@ -7,6 +7,7 @@ import {
   HTMLRendererConfig,
   SVGRendererConfig,
 } from "lottie-web";
+import { useHover } from "@react-aria/interactions";
 
 // This object use to map "name" to lottieWeb eventName
 const PlayerEvent = {
@@ -64,6 +65,7 @@ const Player: FC<PlayerProps> = (props) => {
     onEvent = {},
     renderer = "svg",
     rendererSettings = {},
+    hoverToPlay = false,
   } = props;
 
   const {
@@ -99,7 +101,7 @@ const Player: FC<PlayerProps> = (props) => {
     onError,
   ]);
 
-  const { setNodeRef } = useLottieWeb({
+  const { setNodeRef, play, pause } = useLottieWeb({
     src,
     autoPlay,
     loop,
@@ -111,10 +113,15 @@ const Player: FC<PlayerProps> = (props) => {
     rendererSettings,
   });
 
+  const { hoverProps } = useHover({
+    isDisabled: !hoverToPlay,
+    onHoverStart: play,
+    onHoverEnd: pause,
+  });
+
   return (
     <div style={{ marginTop: "200px" }}>
-      <h1 style={{ textAlign: "center" }}>React-lottie</h1>
-      <div ref={setNodeRef} style={testSize} />
+      <div ref={setNodeRef} style={testSize} {...hoverProps} />
     </div>
   );
 };
