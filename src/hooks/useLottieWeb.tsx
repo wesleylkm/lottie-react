@@ -7,7 +7,7 @@ import lottie, {
   CanvasRendererConfig,
   HTMLRendererConfig,
 } from "lottie-web";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useNodeRef } from "./utils";
 
 type FilteredEventName = Exclude<
@@ -65,6 +65,10 @@ function useLottieWeb(options: LottieWebOption) {
   const [node, setNodeRef] = useNodeRef();
   const lottieInstance = useRef<AnimationItem | null>();
 
+  // Player State
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [numberOfFrame, setNumberOfFrame] = useState(0);
+
   const loadAnimation = () => {
     if (node.current) {
       const animationConfig: AnimationConfig = {
@@ -106,6 +110,11 @@ function useLottieWeb(options: LottieWebOption) {
       const { current } = lottieInstance;
 
       const { enterFrame, data_failed, ...rest } = onEvent;
+
+      current.addEventListener("enterFrame", () => {
+        const currentFrame = current.currentFrame + 1;
+        setNumberOfFrame(Math.floor(currentFrame));
+      });
 
       if (enterFrame) {
         current.addEventListener("enterFrame", () => {
@@ -180,11 +189,17 @@ function useLottieWeb(options: LottieWebOption) {
    */
 
   const play = useCallback(() => {
-    lottieInstance.current?.play();
+    if (lottieInstance.current) {
+      lottieInstance.current.play();
+      setIsPlaying(true);
+    }
   }, []);
 
   const pause = useCallback(() => {
-    lottieInstance.current?.pause();
+    if (lottieInstance.current) {
+      lottieInstance.current.pause();
+      setIsPlaying(false);
+    }
   }, []);
 
   const stop = useCallback(() => {
@@ -196,7 +211,15 @@ function useLottieWeb(options: LottieWebOption) {
     current.goToAndStop(direction === -1 ? totalFrame : 0, true);
   }, [direction]);
 
-  return { lottieInstance, setNodeRef, play, pause, stop };
+  return {
+    lottieInstance,
+    setNodeRef,
+    isPlaying,
+    numberOfFrame,
+    play,
+    pause,
+    stop,
+  };
 }
 
 export default useLottieWeb;
