@@ -1,5 +1,5 @@
 import useLottieWeb from "../hooks/useLottieWeb";
-import { CSSProperties, FC, useMemo } from "react";
+import React, { CSSProperties, FC, ReactElement, useMemo } from "react";
 import {
   AnimationDirection,
   AnimationItem,
@@ -21,7 +21,10 @@ const PlayerEvent = {
   onError: "data_failed",
 };
 
-type FilteredEventName = Exclude<keyof typeof PlayerEvent, "onFrame">;
+type FilteredEventName = Exclude<
+  keyof typeof PlayerEvent,
+  "onFrame" | "onError"
+>;
 type FilteredEventListener = {
   [K in FilteredEventName]?: (animationItem: AnimationItem) => void;
 };
@@ -35,9 +38,11 @@ type PlayerProps = {
   direction?: AnimationDirection;
   exactFrame?: boolean;
   onEvent?: FilteredEventListener & {
+    onError?: (message: string) => void;
     onFrame?: (animationItem: AnimationItem, currentFrame?: number) => void;
   };
   hoverToPlay?: boolean;
+  children?: ReactElement;
 } & Partial<RenderOptions>;
 
 type RenderOptions =
@@ -66,6 +71,7 @@ const Player: FC<PlayerProps> = (props) => {
     renderer = "svg",
     rendererSettings = {},
     hoverToPlay = false,
+    children,
   } = props;
 
   const {
@@ -101,7 +107,15 @@ const Player: FC<PlayerProps> = (props) => {
     onError,
   ]);
 
-  const { setNodeRef, play, pause } = useLottieWeb({
+  const {
+    setNodeRef,
+    isPlaying,
+    totalFrame,
+    numberOfFrame,
+    play,
+    pause,
+    goTo,
+  } = useLottieWeb({
     src,
     autoPlay,
     loop,
@@ -122,13 +136,23 @@ const Player: FC<PlayerProps> = (props) => {
   return (
     <div style={{ marginTop: "200px" }}>
       <div ref={setNodeRef} style={testSize} {...hoverProps} />
+      {React.isValidElement(children)
+        ? React.cloneElement(children, {
+            isPlaying,
+            numberOfFrame,
+            totalFrame,
+            play,
+            pause,
+            goTo,
+          })
+        : null}
     </div>
   );
 };
 
 const testSize: CSSProperties = {
-  width: "300px",
-  height: "300px",
+  width: "200px",
+  height: "200px",
   position: "relative",
 };
 

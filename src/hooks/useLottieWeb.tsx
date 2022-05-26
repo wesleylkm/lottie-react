@@ -68,6 +68,7 @@ function useLottieWeb(options: LottieWebOption) {
   // Player State
   const [isPlaying, setIsPlaying] = useState(false);
   const [numberOfFrame, setNumberOfFrame] = useState(0);
+  const [totalFrame, setTotalFrame] = useState(0);
 
   const loadAnimation = () => {
     if (node.current) {
@@ -112,8 +113,13 @@ function useLottieWeb(options: LottieWebOption) {
       const { enterFrame, data_failed, ...rest } = onEvent;
 
       current.addEventListener("enterFrame", () => {
-        const currentFrame = current.currentFrame + 1;
+        const currentFrame = current.currentFrame;
         setNumberOfFrame(Math.floor(currentFrame));
+      });
+
+      current.addEventListener("DOMLoaded", () => {
+        const totalFrame = current.totalFrames;
+        setTotalFrame(totalFrame);
       });
 
       if (enterFrame) {
@@ -211,14 +217,28 @@ function useLottieWeb(options: LottieWebOption) {
     current.goToAndStop(direction === -1 ? totalFrame : 0, true);
   }, [direction]);
 
+  const goTo = useCallback((value: number, isFrame?: boolean) => {
+    if (lottieInstance.current) {
+      const { current } = lottieInstance;
+
+      if (current.isPaused) {
+        current.goToAndStop(value, isFrame || false);
+      } else {
+        current.goToAndPlay(value, isFrame || false);
+      }
+    }
+  }, []);
+
   return {
     lottieInstance,
     setNodeRef,
     isPlaying,
+    totalFrame,
     numberOfFrame,
     play,
     pause,
     stop,
+    goTo,
   };
 }
 

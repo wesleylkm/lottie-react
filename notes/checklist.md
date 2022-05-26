@@ -13,7 +13,7 @@
 - [x] anim.destroy()
 - [x] error handling (onError)
 - [x] hover to play
-- [] pause animation when not in view -> listener
+- [] pause animation when not in view -> listener (lazy)
 - [] expose renderer settings
 - [] player expose ref to user (forward ref)
 - [x] expose event listener to user?
