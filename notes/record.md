@@ -38,3 +38,5 @@ const lottieInstance = // Initialize
     [Refer](https://github.com/airbnb/lottie-web/issues/2230)
 
 13. When animation `totalFrame` is 61, the maximum `currentFrame` can go is 60. In [LottieFile's Website](https://lottiefiles.com), their player didnot reach 61 actually. But they indicate it is 61.
+
+14. When we set `direction=-1` & `loop=number`, It will only do the animation once (fine for direction=1). Need to find out What's the causes. Temp fix it, count loop internally using `complete event listener & goToAndPlay`
