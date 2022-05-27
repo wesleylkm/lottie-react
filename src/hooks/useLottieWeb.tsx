@@ -229,6 +229,18 @@ function useLottieWeb(options: LottieWebOption) {
     }
   }, []);
 
+  const goToAndPlay = useCallback((value: number, isFrame?: boolean) => {
+    if (lottieInstance.current) {
+      lottieInstance.current.goToAndPlay(value, isFrame);
+    }
+  }, []);
+
+  const goToAndStop = useCallback((value: number, isFrame?: boolean) => {
+    if (lottieInstance.current) {
+      lottieInstance.current.goToAndStop(value, isFrame);
+    }
+  }, []);
+
   return {
     lottieInstance,
     setNodeRef,
@@ -239,6 +251,8 @@ function useLottieWeb(options: LottieWebOption) {
     pause,
     stop,
     goTo,
+    goToAndPlay,
+    goToAndStop,
   };
 }
 

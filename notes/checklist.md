@@ -5,8 +5,8 @@
 - [x] anim.pause()
 - [] anim.setLocationHref(locationHref)
 - [x] anim.setSpeed(speed) -> change using props
-- [] anim.goToAndStop(value, isFrame)
-- [] anim.goToAndPlay(value, isFrame)
+- [x] anim.goToAndStop(value, isFrame)
+- [x] anim.goToAndPlay(value, isFrame)
 - [x] anim.setDirection(direction) -> change using props
 - [] anim.playSegments(segments, forceFlag)
 - [] anim.setSubframe(flag)
@@ -26,3 +26,4 @@
 - [] write test (E2E (multiple browser) first then unit if necessary)
 - [] Player component `rendererSettings` intellsense based on `renderer` (typescript)
 - [x] Expose AnimationItem instance to user (useLottieWeb hooks)
+- [] setup github action
