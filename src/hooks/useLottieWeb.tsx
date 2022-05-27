@@ -110,7 +110,11 @@ function useLottieWeb(options: LottieWebOption) {
     if (lottieInstance.current) {
       const { current } = lottieInstance;
 
-      const { enterFrame, data_failed, ...rest } = onEvent;
+      const { enterFrame, data_failed, complete, ...rest } = onEvent;
+
+      current.addEventListener("complete", () => {
+        setIsPlaying(false);
+      });
 
       current.addEventListener("enterFrame", () => {
         const currentFrame = current.currentFrame;
