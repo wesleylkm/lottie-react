@@ -33,3 +33,8 @@ const lottieInstance = // Initialize
 10. `totalFrames` is only available after/during the `DOMLoaded` event callback. So we need to separate the DOMLoaded event and **set totalFrame** of the animation
 
 11. `canvas` rendering has the highest quality, then html, svg
+
+12. There is a `resize()` method in AnimationItem, It is use for `canvas/html renderer`, Canvas renderer won't scale with viewport, so we need to resize when viewport is changing
+    [Refer](https://github.com/airbnb/lottie-web/issues/2230)
+
+13. When animation `totalFrame` is 61, the maximum `currentFrame` can go is 60. In [LottieFile's Website](https://lottiefiles.com), their player didnot reach 61 actually. But they indicate it is 61.

@@ -27,3 +27,4 @@
 - [] Player component `rendererSettings` intellsense based on `renderer` (typescript)
 - [x] Expose AnimationItem instance to user (useLottieWeb hooks)
 - [] setup github action
+- [] support resize on canvas (resize event listener)
