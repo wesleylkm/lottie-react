@@ -150,7 +150,11 @@ function useLottieWeb(options: LottieWebOption) {
         current.addEventListener("DOMLoaded", () => {
           const totalFrames = current.totalFrames;
 
-          current.goToAndStop(totalFrames, true);
+          if (autoPlay) {
+            current.goToAndPlay(totalFrames - 1, true);
+          } else {
+            current.goToAndStop(totalFrames - 1, true);
+          }
           current.setDirection(-1);
         });
       }
@@ -214,7 +218,7 @@ function useLottieWeb(options: LottieWebOption) {
     const { current } = lottieInstance;
 
     const totalFrame = current.totalFrames;
-    current.goToAndStop(direction === -1 ? totalFrame : 0, true);
+    current.goToAndStop(direction === -1 ? totalFrame - 1 : 0, true);
   }, [direction]);
 
   const goTo = useCallback((value: number, isFrame?: boolean) => {
