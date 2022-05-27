@@ -66,7 +66,7 @@ function useLottieWeb(options: LottieWebOption) {
   const lottieInstance = useRef<AnimationItem | null>();
 
   // Player State
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(!!autoPlay);
   const [numberOfFrame, setNumberOfFrame] = useState(0);
   const [totalFrame, setTotalFrame] = useState(0);
 
