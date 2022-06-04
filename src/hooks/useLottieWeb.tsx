@@ -64,11 +64,13 @@ function useLottieWeb(options: LottieWebOption) {
 
   const [node, setNodeRef] = useNodeRef();
   const lottieInstance = useRef<AnimationItem | null>();
+  const isLoaded = useRef(false);
 
   // Player State
   const [isPlaying, setIsPlaying] = useState(!!autoPlay);
   const [numberOfFrame, setNumberOfFrame] = useState(0);
   const [totalFrame, setTotalFrame] = useState(0);
+  const reverseLoop = useRef(0);
 
   const loadAnimation = () => {
     if (node.current) {
@@ -100,6 +102,7 @@ function useLottieWeb(options: LottieWebOption) {
       if (lottieInstance.current) {
         lottieInstance.current.destroy();
 
+        isLoaded.current = false;
         lottieInstance.current = null;
       }
     };
@@ -112,7 +115,21 @@ function useLottieWeb(options: LottieWebOption) {
 
       const { enterFrame, data_failed, complete, ...rest } = onEvent;
 
+      // For direction -1 and loop = number, this event handler make wrong state.
       current.addEventListener("complete", () => {
+        const totalFrames = current.totalFrames;
+        if (direction === -1) {
+          // 1. If it is true, means we no need to handle, because default is the correct behavior
+          // If it is a number
+          if (reverseLoop.current > 0) {
+            current.goToAndPlay(totalFrames - 1, true);
+            reverseLoop.current = reverseLoop.current - 1;
+          } else {
+            setIsPlaying(false);
+          }
+          return;
+        }
+
         setIsPlaying(false);
       });
 
@@ -122,8 +139,27 @@ function useLottieWeb(options: LottieWebOption) {
       });
 
       current.addEventListener("DOMLoaded", () => {
-        const totalFrame = current.totalFrames;
-        setTotalFrame(totalFrame);
+        const totalFrames = current.totalFrames;
+        if (exactFrame) {
+          current.setSubframe(false);
+        }
+
+        if (direction === -1) {
+          if (typeof loop === "number" && !isNaN(loop)) {
+            reverseLoop.current = loop;
+          }
+
+          current.setDirection(-1);
+
+          if (autoPlay) {
+            current.goToAndPlay(totalFrames - 1, true);
+          } else {
+            current.goToAndStop(totalFrames - 1, true);
+          }
+        }
+
+        isLoaded.current = true;
+        setTotalFrame(totalFrames);
       });
 
       if (enterFrame) {
@@ -143,26 +179,6 @@ function useLottieWeb(options: LottieWebOption) {
         }
       }
 
-      if (exactFrame) {
-        current.addEventListener("DOMLoaded", () => {
-          current.setSubframe(false);
-        });
-      }
-
-      // NOTE:: totalFrames only available after DomLoaded
-      if (direction === -1) {
-        current.addEventListener("DOMLoaded", () => {
-          const totalFrames = current.totalFrames;
-
-          if (autoPlay) {
-            current.goToAndPlay(totalFrames - 1, true);
-          } else {
-            current.goToAndStop(totalFrames - 1, true);
-          }
-          current.setDirection(-1);
-        });
-      }
-
       if (data_failed) {
         current.addEventListener("data_failed", () => {
           data_failed("Failed to fetch lottie animation from resource");
@@ -173,7 +189,7 @@ function useLottieWeb(options: LottieWebOption) {
 
   // Set Direction when initial, or prop changed
   useEffect(() => {
-    if (lottieInstance.current) {
+    if (lottieInstance.current && isLoaded.current) {
       const { current } = lottieInstance;
 
       if (current.isPaused) {

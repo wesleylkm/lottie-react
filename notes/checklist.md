@@ -28,3 +28,4 @@
 - [x] Expose AnimationItem instance to user (useLottieWeb hooks)
 - [] setup github action
 - [] support resize on canvas (resize event listener)
+- [x] support reverse animation (including loop with number)
