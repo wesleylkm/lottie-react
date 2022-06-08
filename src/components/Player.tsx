@@ -1,5 +1,12 @@
 import useLottieWeb from "../hooks/useLottieWeb";
-import React, { CSSProperties, FC, ReactElement, useMemo } from "react";
+import React, {
+  CSSProperties,
+  FC,
+  MutableRefObject,
+  ReactElement,
+  useEffect,
+  useMemo,
+} from "react";
 import {
   AnimationDirection,
   AnimationItem,
@@ -43,6 +50,9 @@ type PlayerProps = {
   };
   hoverToPlay?: boolean;
   children?: ReactElement;
+  lottieRef?:
+    | ((instance: AnimationItem) => void)
+    | MutableRefObject<AnimationItem | undefined>;
 } & Partial<RenderOptions>;
 
 type RenderOptions =
@@ -72,6 +82,7 @@ const Player: FC<PlayerProps> = (props) => {
     rendererSettings = {},
     hoverToPlay = false,
     children,
+    lottieRef,
   } = props;
 
   const {
@@ -108,6 +119,7 @@ const Player: FC<PlayerProps> = (props) => {
   ]);
 
   const {
+    lottieInstance,
     setNodeRef,
     isPlaying,
     totalFrame,
@@ -132,6 +144,16 @@ const Player: FC<PlayerProps> = (props) => {
     onHoverStart: play,
     onHoverEnd: pause,
   });
+
+  useEffect(() => {
+    if (lottieInstance.current && lottieRef) {
+      if (typeof lottieRef === "function") {
+        lottieRef(lottieInstance.current);
+      } else {
+        lottieRef.current = lottieInstance.current;
+      }
+    }
+  }, []);
 
   return (
     <div style={{ marginTop: "200px" }}>

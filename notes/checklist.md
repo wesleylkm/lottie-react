@@ -14,8 +14,9 @@
 - [x] error handling (onError)
 - [x] hover to play
 - [] pause animation when not in view -> listener (lazy)
-- [] expose renderer settings
+- [x] expose renderer settings
 - [] player expose ref to user (forward ref)
+- [x] expose lottieRef to user from the player
 - [x] expose event listener to user?
 - [] play segment
 - [] build player (hover, play,pause,stop button, number of frame, dragger)
