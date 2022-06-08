@@ -53,6 +53,7 @@ type PlayerProps = {
   lottieRef?:
     | ((instance: AnimationItem) => void)
     | MutableRefObject<AnimationItem | undefined>;
+  backgroundColor?: string;
 } & Partial<RenderOptions>;
 
 type RenderOptions =
@@ -83,6 +84,7 @@ const Player: FC<PlayerProps> = (props) => {
     hoverToPlay = false,
     children,
     lottieRef,
+    backgroundColor,
   } = props;
 
   const {
@@ -156,8 +158,14 @@ const Player: FC<PlayerProps> = (props) => {
   }, []);
 
   return (
-    <div style={{ marginTop: "200px" }}>
-      <div ref={setNodeRef} style={testSize} {...hoverProps} />
+    <div>
+      <div
+        ref={setNodeRef}
+        style={{
+          backgroundColor,
+        }}
+        {...hoverProps}
+      />
       {React.isValidElement(children)
         ? React.cloneElement(children, {
             isPlaying,
@@ -176,6 +184,7 @@ const testSize: CSSProperties = {
   width: "200px",
   height: "200px",
   position: "relative",
+  backgroundColor: "blue",
 };
 
 export default Player;

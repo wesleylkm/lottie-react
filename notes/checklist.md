@@ -18,6 +18,7 @@
 - [] player expose ref to user (forward ref)
 - [x] expose lottieRef to user from the player
 - [x] expose event listener to user?
+- [x] allow change background color for player
 - [] play segment
 - [] build player (hover, play,pause,stop button, number of frame, dragger)
 - [] done useLottieHooks (low level api)
@@ -25,7 +26,7 @@
 - [x] allow to get currentFrame using enterFrame eventlistener
 - [] refactor variable name
 - [] write test (E2E (multiple browser) first then unit if necessary)
-- [] Player component `rendererSettings` intellsense based on `renderer` (typescript)
+- [x] Player component `rendererSettings` intellsense based on `renderer` (typescript)
 - [x] Expose AnimationItem instance to user (useLottieWeb hooks)
 - [] setup github action
 - [] support resize on canvas (resize event listener)
