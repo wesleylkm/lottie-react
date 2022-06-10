@@ -28,13 +28,9 @@ const Control = (props) => {
           gap: "8px",
         }}
       >
-        <Slider
-          value={numberOfFrame}
-          maxValue={totalFrame - 1}
-          onChange={goTo}
-        />
+        <Slider value={numberOfFrame} maxValue={totalFrame} onChange={goTo} />
 
-        <FrameIndicator value={numberOfFrame + 1} />
+        <FrameIndicator value={numberOfFrame} />
       </div>
     </div>
   );

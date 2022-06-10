@@ -139,7 +139,8 @@ function useLottieWeb(options: LottieWebOption) {
       });
 
       current.addEventListener("DOMLoaded", () => {
-        const totalFrames = current.totalFrames;
+        // Set total frame -1, because lottie-web won't play the last frame
+        const totalFrames = current.totalFrames - 1;
         if (exactFrame) {
           current.setSubframe(false);
         }
