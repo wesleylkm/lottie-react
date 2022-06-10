@@ -127,10 +127,12 @@ function useLottieWeb(options: LottieWebOption) {
           } else {
             setIsPlaying(false);
           }
+          complete && complete(current);
           return;
+        } else {
+          setIsPlaying(false);
+          complete && complete(current);
         }
-
-        setIsPlaying(false);
       });
 
       current.addEventListener("enterFrame", () => {
